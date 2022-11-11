@@ -130,54 +130,92 @@
 	<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
 	<script>
 		$(document).ready(function() {
 			$('table').DataTable();
 
-			$('form').on('submit', function(e) {
-				e.preventDefault();
-				let form = $('form')[0];
-
-				Swal.fire({
-					title: 'Konfirmasi',
-					text: "Apakah Anda yakin dengan data yang disimpan?",
-					icon: 'question',
-					showCancelButton: true,
-					confirmButtonColor: '#3085d6',
-					confirmButtonText: 'Ya',
-					cancelButtonColor: '#d33',
-					cancelButtonText: 'Tidak',
-				}).then((result) => {
-					if (result.value) {
-						showLoading();
-						$.ajax({
-							type: form.method,
-							url: form.action,
-							data: new FormData(form),
-							processData: false,
-							contentType: false,
-							accepts: 'json',
-							success: function(response) {
-								hideLoading();
-								Swal.fire({
-									title: 'Berhasil!',
-									text: JSON.parse(response).message,
-									icon: 'success',
-									confirmButtonColor: '#3085d6',
-									confirmButtonText: 'Ya',
-									timer: 3000,
-								}).then(() => {
-									window.location.href = '<?= base_url('nilai') ?>';
-								});
-							},
-							error: function(err, text) {
-								hideLoading();
-								showSwalError(err, err.responseJSON.message)
-							}
-						});
+			$('form').validate({
+				rules: {
+					kehadiran: {
+						required: true,
+					},
+					nilai_tugas: {
+						required: true,
+					},
+					nilai_uts: {
+						required: true,
+					},
+					nilai_uas: {
+						required: true
 					}
-				});
+				},
+				messages: {
+					kehadiran: {
+						required: 'kehadiran wajib diisi',
+					},
+					nilai_tugas: {
+						required: 'nilai tugas wajib diisi',
+					},
+					nilai_uts: {
+						required: 'nilai UTS wajib diisi',
+					},
+					nilai_uas: {
+						required: 'nilai UAS wajib diisi'
+					}
+				},
+				submitHandler: function(form) {
+					Swal.fire({
+						title: 'Konfirmasi',
+						text: "Apakah Anda yakin dengan data yang disimpan?",
+						icon: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						confirmButtonText: 'Ya',
+						cancelButtonColor: '#d33',
+						cancelButtonText: 'Tidak',
+					}).then((result) => {
+						if (result.value) {
+							showLoading();
+							$.ajax({
+								type: form.method,
+								url: form.action,
+								data: new FormData(form),
+								processData: false,
+								contentType: false,
+								success: function(response) {
+									hideLoading();
+									Swal.fire({
+										title: 'Berhasil!',
+										text: JSON.parse(response).message,
+										icon: 'success',
+										confirmButtonColor: '#3085d6',
+										confirmButtonText: 'Ya',
+										timer: 3000,
+									}).then(() => {
+										window.location.href = '<?= base_url('nilai') ?>';
+									});
+								},
+								error: function(err, text) {
+									hideLoading();
+									showSwalError(err, err.responseJSON.message)
+								}
+							});
+						}
+					});
+				},
+				errorElement: 'span',
+				errorPlacement: function(error, element) {
+					error.addClass('invalid-feedback');
+					element.closest('.form-group').append(error);
+				},
+				highlight: function(element, errorClass, validClass) {
+					$(element).addClass('is-invalid');
+				},
+				unhighlight: function(element, errorClass, validClass) {
+					$(element).removeClass('is-invalid');
+				}
 			});
 
 			$('.btn-swal').on('click', function() {
