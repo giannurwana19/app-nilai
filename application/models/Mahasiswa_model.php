@@ -7,7 +7,7 @@ class Mahasiswa_model extends CI_Model
 
 	public function get()
 	{
-		return $this->db->get($this->table)->result_array();
+		return $this->db->order_by('id', 'desc')->get($this->table)->result_array();
 	}
 
 	public function create($request)
