@@ -1,13 +1,14 @@
-<?php 
-defined('BASEPATH') OR exit('No direct script access allowed');
-                        
-class Mata_kuliah_model extends CI_Model 
-{
-    public function select()
-    {
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-    }                        
-                        
+class Mata_kuliah_model extends CI_Model
+{
+	protected $table = 'mata_kuliah';
+
+	public function get()
+	{
+		return $this->db->get($this->table)->result_array();
+	}
 }
 
 

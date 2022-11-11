@@ -7,6 +7,8 @@ class Nilai extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('mahasiswa_model');
+		$this->load->model('mata_kuliah_model');
 	}
 
 	public function index()
@@ -16,7 +18,10 @@ class Nilai extends CI_Controller
 
 	public function create()
 	{
-		$this->load->view('nilai/create');
+		$data['all_mahasiswa'] = $this->mahasiswa_model->get();
+		$data['all_mata_kuliah'] = $this->mata_kuliah_model->get();
+
+		$this->load->view('nilai/create', $data);
 	}
 
 	public function show($id)

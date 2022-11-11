@@ -75,31 +75,49 @@
 
 	<div class="container">
 		<div class="mb-3">
-			<h2 class="my-3">Tambah Mahasiswa</h2>
+			<h2 class="my-3">Nilai Mahasiswa</h2>
 		</div>
 
 		<div class="row">
 			<div class="col-md-6">
-				<form action="<?= base_url('mahasiswa/store') ?>" method="POST">
+				<form action="<?= base_url('nilai/store') ?>" method="POST">
 					<div class="form-group">
-						<label for="nama">Nama</label>
-						<input type="text" name="nama" class="form-control form-control-sm" required>
-					</div>
-					<div class="form-group">
-						<label for="nim">NIM</label>
-						<input type="number" name="nim" class="form-control form-control-sm" required>
-					</div>
-					<div class="form-group">
-						<label for="jurusan">Jurusan</label>
-						<select name="jurusan" id="jurusan" class="form-control" required>
-							<option value="Sistem Informasi">Sistem Informasi</option>
-							<option value="Teknik Informatika">Teknik Informatika</option>
-							<option value="Sistem Komputer">Sistem Komputer</option>
+						<label for="id_mahasiswa">Nama Mahasiswa</label>
+						<select name="id_mahasiswa" id="id_mahasiswa" class="form-control form-control-sm">
+							<option value="">Pilih Mahasiswa</option>
+							<?php foreach ($all_mahasiswa as $mahasiswa) : ?>
+								<option value="<?= $mahasiswa['id'] ?>"><?= $mahasiswa['nama'] ?></option>
+							<?php endforeach ?>
 						</select>
 					</div>
+
 					<div class="form-group">
-						<label for="no_hp">No HP</label>
-						<input type="number" name="no_hp" class="form-control form-control-sm" required>
+						<label for="id_mahasiswa">Mata Kuliah</label>
+						<select name="id_mata_kuliah" id="id_mata_kuliah" class="form-control form-control-sm">
+							<option value="">Pilih Mata Kuliah</option>
+							<?php foreach ($all_mata_kuliah as $mata_kuliah) : ?>
+								<option value="<?= $mata_kuliah['id'] ?>"><?= $mata_kuliah['nama'] ?></option>
+							<?php endforeach ?>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="kehadiran">Kehadiran</label> <small class="text-danger font-weight-bold" style="font-size: 10px">* (dari 14 pertemuan)</small>
+						<input type="number" name="kehadiran" class="form-control form-control-sm">
+					</div>
+
+					<div class="form-group">
+						<label for="nilai_tugas">Nilai Tugas</label>
+						<input type="number" name="nilai_tugas" class="form-control form-control-sm">
+					</div>
+					<div class="form-group">
+						<label for="nilai_uts">Nilai UTS</label>
+						<input type="number" name="nilai_uts" class="form-control form-control-sm">
+					</div>
+
+					<div class="form-group">
+						<label for="nilai_uas">Nilai UAS</label>
+						<input type="number" name="nilai_uas" class="form-control form-control-sm">
 					</div>
 
 					<button type="submit" class="btn btn-primary btn-sm">Simpan</button>
