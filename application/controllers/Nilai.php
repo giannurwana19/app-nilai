@@ -14,6 +14,11 @@ class Nilai extends CI_Controller
 		$this->load->view('nilai/index');
 	}
 
+	public function create()
+	{
+		$this->load->view('nilai/create');
+	}
+
 	public function show($id)
 	{
 		//
