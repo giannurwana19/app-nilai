@@ -157,17 +157,18 @@
 							data: new FormData(form),
 							processData: false,
 							contentType: false,
+							accepts: 'json',
 							success: function(response) {
 								hideLoading();
 								Swal.fire({
 									title: 'Berhasil!',
-									text: response.message,
+									text: JSON.parse(response).message,
 									icon: 'success',
 									confirmButtonColor: '#3085d6',
 									confirmButtonText: 'Ya',
 									timer: 3000,
 								}).then(() => {
-									window.location.href = '<?= base_url('mahasiswa') ?>';
+									window.location.href = '<?= base_url('nilai') ?>';
 								});
 							},
 							error: function(err, text) {

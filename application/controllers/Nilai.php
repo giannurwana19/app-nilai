@@ -31,7 +31,12 @@ class Nilai extends CI_Controller
 
 	public function store()
 	{
-		//
+		$request = $this->input->post(null, true);
+
+		echo json_encode([
+			'success' => true,
+			'message' => 'Data nilai berhasil ditambahkan!'
+		]);
 	}
 
 	public function destroy($id)
