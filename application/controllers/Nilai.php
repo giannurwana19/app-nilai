@@ -11,7 +11,7 @@ class Nilai extends CI_Controller
 
 	public function index()
 	{
-		echo 'daftar Nilai';
+		$this->load->view('nilai/index');
 	}
 
 	public function show($id)

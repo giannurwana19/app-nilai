@@ -11,7 +11,8 @@ class Mahasiswa extends CI_Controller
 
 	public function index()
 	{
-		echo 'daftar mahasiswa';
+		$data[''] = [];
+		$this->load->view('mahasiswa/index');
 	}
 
 	public function show($id)

@@ -11,7 +11,7 @@ class Mata_kuliah extends CI_Controller
 
 	public function index()
 	{
-		echo 'daftar mata kuliah';
+		$this->load->view('mata-kuliah/index');
 	}
 
 	public function show($id)
