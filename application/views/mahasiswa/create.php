@@ -32,35 +32,37 @@
 
 	<div class="container">
 		<div class="mb-3">
-			<h2 class="my-3">Daftar Mahasiswa</h2>
-			<a href="<?= base_url('mahasiswa/create') ?>" class="btn btn-primary btn-sm">+ Mahasiswa</a>
+			<h2 class="my-3">Tambah Mahasiswa</h2>
 		</div>
 
-		<table class="table table-bordered" style="min-width: 100%;">
-			<thead>
-				<tr>
-					<th>No</th>
-					<th>Nama</th>
-					<th>Jurusan</th>
-					<th>No Hp</th>
-					<th>Aksi</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($all_mahasiswa as $mahasiswa) : ?>
-					<tr>
-						<td><?= $mahasiswa['nama'] ?></td>
-						<td><?= $mahasiswa['nim'] ?></td>
-						<td><?= $mahasiswa['jurusan'] ?></td>
-						<td><?= $mahasiswa['no_hp'] ?></td>
-						<td>
-							<a href="#" class="btn btn-success btn-sm">Edit</a>
-							<a href="#" class="btn btn-danger btn-sm">Hapus</a>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+		<div class="row">
+			<div class="col-md-6">
+				<form action="<?= base_url('mahasiswa/store') ?>" method="POST">
+					<div class="form-group">
+						<label for="nama">Nama</label>
+						<input type="text" name="nama" class="form-control form-control-sm" required>
+					</div>
+					<div class="form-group">
+						<label for="nim">NIM</label>
+						<input type="number" name="nim" class="form-control form-control-sm" required>
+					</div>
+					<div class="form-group">
+						<label for="jurusan">Jurusan</label>
+						<select name="jurusan" id="jurusan" class="form-control" required>
+							<option value="Sistem Informasi">Sistem Informasi</option>
+							<option value="Teknik Informatika">Teknik Informatika</option>
+							<option value="Sistem Komputer">Sistem Komputer</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="no_hp">No HP</label>
+						<input type="number" name="no_hp" class="form-control form-control-sm" required>
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+				</form>
+			</div>
+		</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -72,6 +74,12 @@
 		$(document).ready(function() {
 			$('table').DataTable();
 
+
+			$('form').on('submit', function(e) {
+				e.preventDefault();
+				alert('oke');
+			});
+
 			$('.btn-swal').on('click', function() {
 				Swal.fire({
 					title: 'Error!',
@@ -79,7 +87,7 @@
 					icon: 'error',
 					confirmButtonText: 'Cool'
 				})
-			})
+			});
 		});
 	</script>
 </body>

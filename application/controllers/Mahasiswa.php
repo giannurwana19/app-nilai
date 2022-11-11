@@ -17,6 +17,11 @@ class Mahasiswa extends CI_Controller
 		$this->load->view('mahasiswa/index', $data);
 	}
 
+	public function create()
+	{
+		$this->load->view('mahasiswa/create');
+	}
+
 	public function show($id)
 	{
 		//
@@ -24,7 +29,14 @@ class Mahasiswa extends CI_Controller
 
 	public function store()
 	{
-		//
+		$request = $this->input->post(null, true);
+
+		$this->mahasiswa_model->create($request);
+
+		echo json_encode([
+			'success' => true,
+			'message' => 'Data mahasiswa berhasil ditambahkan!'
+		]);
 	}
 
 	public function destroy($id)

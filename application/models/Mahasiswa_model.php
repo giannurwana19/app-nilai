@@ -9,4 +9,9 @@ class Mahasiswa_model extends CI_Model
 	{
 		return $this->db->get($this->table)->result_array();
 	}
+
+	public function create($request)
+	{
+		$this->db->insert($this->table, $request);
+	}
 }
