@@ -15,6 +15,16 @@ class Mahasiswa_model extends CI_Model
 		$this->db->insert($this->table, $request);
 	}
 
+	public function findById($id)
+	{
+		return $this->db->where('id', $id)->get($this->table)->row_array();
+	}
+
+	public function update($id, $request)
+	{
+		$this->db->update($this->table, $request, ['id' => $id]);
+	}
+
 	public function delete($id)
 	{
 		$this->db->delete($this->table, ['id' => $id]);

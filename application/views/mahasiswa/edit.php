@@ -10,9 +10,6 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 
-	<title>Mahasiswa</title>
-
-
 	<style>
 		.is-invalid+.select2-container--bootstrap4 .select2-selection--single {
 			border: 2px solid #dc3545 !important;
@@ -68,6 +65,8 @@
 			z-index: 999;
 		}
 	</style>
+
+	<title>Mahasiswa</title>
 </head>
 
 <body>
@@ -76,35 +75,37 @@
 
 	<div class="container">
 		<div class="mb-3">
-			<h2 class="my-3">Daftar Mahasiswa</h2>
-			<a href="<?= base_url('mahasiswa/create') ?>" class="btn btn-primary btn-sm">+ Mahasiswa</a>
+			<h2 class="my-3">Edit Mahasiswa</h2>
 		</div>
 
-		<table class="table table-bordered" style="min-width: 100%;">
-			<thead>
-				<tr>
-					<th>No</th>
-					<th>Nama</th>
-					<th>Jurusan</th>
-					<th>No Hp</th>
-					<th>Aksi</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($all_mahasiswa as $mahasiswa) : ?>
-					<tr>
-						<td><?= $mahasiswa['nama'] ?></td>
-						<td><?= $mahasiswa['nim'] ?></td>
-						<td><?= $mahasiswa['jurusan'] ?></td>
-						<td><?= $mahasiswa['no_hp'] ?></td>
-						<td>
-							<a href="<?= base_url('mahasiswa/edit/' . $mahasiswa['id']) ?>" class="btn btn-success btn-sm">Edit</a>
-							<a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $mahasiswa['id'] ?>">Hapus</a>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+		<div class="row">
+			<div class="col-md-6">
+				<form action="<?= base_url('mahasiswa/update/' . $mahasiswa['id']) ?>" method="POST">
+					<div class="form-group">
+						<label for="nama">Nama</label>
+						<input type="text" name="nama" value="<?= $mahasiswa['nama'] ?>" class="form-control form-control-sm" required>
+					</div>
+					<div class="form-group">
+						<label for="nim">NIM</label>
+						<input type="number" name="nim" value="<?= $mahasiswa['nim'] ?>" class="form-control form-control-sm" required>
+					</div>
+					<div class="form-group">
+						<label for="jurusan">Jurusan</label>
+						<select name="jurusan" id="jurusan" class="form-control" required>
+							<option value="Sistem Informasi" <?= $mahasiswa['jurusan'] == 'Sistem Informasi' ? 'selected' : '' ?>>Sistem Informasi</option>
+							<option value="Teknik Informatika" <?= $mahasiswa['jurusan'] == 'Teknik Informatika' ? 'selected' : '' ?>>Teknik Informatika</option>
+							<option value="Sistem Komputer" <?= $mahasiswa['jurusan'] == 'Sistem Komputer' ? 'selected' : '' ?>>Sistem Komputer</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="no_hp">No HP</label>
+						<input type="number" name="no_hp" value="<?= $mahasiswa['no_hp'] ?>" class="form-control form-control-sm" required>
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+				</form>
+			</div>
+		</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -116,22 +117,13 @@
 		$(document).ready(function() {
 			$('table').DataTable();
 
-			$('.btn-swal').on('click', function() {
-				Swal.fire({
-					title: 'Error!',
-					text: 'Do you want to continue',
-					icon: 'error',
-					confirmButtonText: 'Cool'
-				})
-			})
-
-			$('.btn-delete').on('click', function(e) {
+			$('form').on('submit', function(e) {
 				e.preventDefault();
+				let form = $('form')[0];
 
-				let id = $(this).data('id');
 				Swal.fire({
 					title: 'Konfirmasi',
-					text: "Apakah Anda yakin dengan data yang dihapus?",
+					text: "Apakah Anda yakin dengan data yang disimpan?",
 					icon: 'question',
 					showCancelButton: true,
 					confirmButtonColor: '#3085d6',
@@ -142,8 +134,11 @@
 					if (result.value) {
 						showLoading();
 						$.ajax({
-							type: 'GET',
-							url: '<?= base_url('mahasiswa/destroy/') ?>' + id,
+							type: form.method,
+							url: form.action,
+							data: new FormData(form),
+							processData: false,
+							contentType: false,
 							success: function(response) {
 								hideLoading();
 								Swal.fire({
@@ -159,11 +154,20 @@
 							},
 							error: function(err, text) {
 								hideLoading();
-								showSwalError(err, text)
+								showSwalError(err, err.responseJSON.message)
 							}
 						});
 					}
 				});
+			});
+
+			$('.btn-swal').on('click', function() {
+				Swal.fire({
+					title: 'Error!',
+					text: 'Do you want to continue',
+					icon: 'error',
+					confirmButtonText: 'Cool'
+				})
 			});
 		});
 	</script>

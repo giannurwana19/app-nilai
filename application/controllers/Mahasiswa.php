@@ -27,6 +27,13 @@ class Mahasiswa extends CI_Controller
 		//
 	}
 
+	public function edit($id)
+	{
+		$data['mahasiswa'] = $this->mahasiswa_model->findById($id);
+
+		$this->load->view('mahasiswa/edit', $data);
+	}
+
 	public function store()
 	{
 		$request = $this->input->post(null, true);
@@ -36,6 +43,18 @@ class Mahasiswa extends CI_Controller
 		echo json_encode([
 			'success' => true,
 			'message' => 'Data mahasiswa berhasil ditambahkan!'
+		]);
+	}
+
+	public function update($id)
+	{
+		$request = $this->input->post(null, true);
+
+		$this->mahasiswa_model->update($id, $request);
+
+		echo json_encode([
+			'success' => true,
+			'message' => 'Data mahasiswa berhasil diupdate!'
 		]);
 	}
 
