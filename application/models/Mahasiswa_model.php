@@ -14,4 +14,9 @@ class Mahasiswa_model extends CI_Model
 	{
 		$this->db->insert($this->table, $request);
 	}
+
+	public function delete($id)
+	{
+		$this->db->delete($this->table, ['id' => $id]);
+	}
 }

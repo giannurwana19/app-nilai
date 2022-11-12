@@ -41,6 +41,11 @@ class Mahasiswa extends CI_Controller
 
 	public function destroy($id)
 	{
-		//
+		$this->mahasiswa_model->delete($id);
+
+		echo json_encode([
+			'success' => true,
+			'message' => 'Data mahasiswa berhasil dihapus!'
+		]);
 	}
 }

@@ -11,9 +11,67 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
 
 	<title>Mahasiswa</title>
+
+
+	<style>
+		.is-invalid+.select2-container--bootstrap4 .select2-selection--single {
+			border: 2px solid #dc3545 !important;
+		}
+
+		#cover-spin {
+			position: fixed;
+			width: 100%;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-color: rgba(255, 255, 255, 0.7);
+			z-index: 9999;
+			display: none;
+		}
+
+		@-webkit-keyframes spin {
+			from {
+				-webkit-transform: rotate(0deg);
+			}
+
+			to {
+				-webkit-transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		#cover-spin::after {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 48%;
+			top: 40%;
+			width: 40px;
+			height: 40px;
+			border-style: solid;
+			border-color: black;
+			border-top-color: transparent;
+			border-width: 4px;
+			border-radius: 50%;
+			-webkit-animation: spin .8s linear infinite;
+			animation: spin .8s linear infinite;
+			z-index: 999;
+		}
+	</style>
 </head>
 
 <body>
+	<div id="cover-spin"></div>
 	<?php $this->load->view('partials/navbar') ?>
 
 	<div class="container">
@@ -41,7 +99,7 @@
 						<td><?= $mahasiswa['no_hp'] ?></td>
 						<td>
 							<a href="#" class="btn btn-success btn-sm">Edit</a>
-							<a href="#" class="btn btn-danger btn-sm">Hapus</a>
+							<a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $mahasiswa['id'] ?>">Hapus</a>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -66,7 +124,69 @@
 					confirmButtonText: 'Cool'
 				})
 			})
+
+			$('.btn-delete').on('click', function(e) {
+				e.preventDefault();
+
+				let id = $(this).data('id');
+				Swal.fire({
+					title: 'Konfirmasi',
+					text: "Apakah Anda yakin dengan data yang dihapus?",
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					confirmButtonText: 'Ya',
+					cancelButtonColor: '#d33',
+					cancelButtonText: 'Tidak',
+				}).then((result) => {
+					if (result.value) {
+						showLoading();
+						$.ajax({
+							type: 'GET',
+							url: '<?= base_url('mahasiswa/destroy/') ?>' + id,
+							success: function(response) {
+								hideLoading();
+								Swal.fire({
+									title: 'Berhasil!',
+									text: JSON.parse(response).message,
+									icon: 'success',
+									confirmButtonColor: '#3085d6',
+									confirmButtonText: 'Ya',
+									timer: 3000,
+								}).then(() => {
+									window.location.href = '<?= base_url('mahasiswa') ?>';
+								});
+							},
+							error: function(err, text) {
+								hideLoading();
+								showSwalError(err, text)
+							}
+						});
+					}
+				});
+			});
 		});
+	</script>
+
+	<script>
+		function showLoading() {
+			$('#cover-spin').show();
+		}
+
+		function hideLoading() {
+			$('#cover-spin').hide();
+		}
+
+		function showSwalError(err, text) {
+			console.log(err, text)
+			Swal.fire({
+				icon: 'error',
+				title: 'Opss...',
+				text: text ?? 'Gagal memproses data, terjadi kesalahan',
+				showConfirmButton: true,
+				timer: 3000,
+			});
+		}
 	</script>
 </body>
 
