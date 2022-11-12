@@ -14,7 +14,9 @@ class Nilai extends CI_Controller
 
 	public function index()
 	{
-		$this->load->view('nilai/index');
+		$data['all_nilai'] = $this->nilai_model->get();
+
+		$this->load->view('nilai/index', $data);
 	}
 
 	public function create()

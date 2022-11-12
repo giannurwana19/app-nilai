@@ -168,6 +168,10 @@
 				submitHandler: function(form) {
 					let id_mahasiswa = $('[name=id_mahasiswa]').val();
 					let id_mata_kuliah = $('[name=id_mata_kuliah]').val();
+					let raw_kehadiran = parseInt($('[name=kehadiran]').val() ?? 0);
+					let raw_nilai_tugas = parseInt($('[name=nilai_tugas]').val() ?? 0);
+					let raw_nilai_uts = parseInt($('[name=nilai_uts]').val() ?? 0);
+					let raw_nilai_uas = parseInt($('[name=nilai_uas]').val() ?? 0);
 					let kehadiran = (parseInt($('[name=kehadiran]').val() ?? 0) / 14) * 100 * 0.1;
 					let nilai_tugas = parseInt($('[name=nilai_tugas]').val() ?? 0) * 0.2;
 					let nilai_uts = parseInt($('[name=nilai_uts]').val() ?? 0) * 0.3;
@@ -206,10 +210,10 @@
 					let formData = {
 						id_mahasiswa,
 						id_mata_kuliah,
-						kehadiran,
-						nilai_tugas,
-						nilai_uts,
-						nilai_uas,
+						kehadiran: raw_kehadiran,
+						nilai_tugas: raw_nilai_tugas,
+						nilai_uts: raw_nilai_uts,
+						nilai_uas: raw_nilai_uas,
 						nilai_akhir,
 						grade
 					};
