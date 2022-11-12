@@ -97,18 +97,42 @@
 						<td><?= $mata_kuliah['kode'] ?></td>
 						<td><?= $mata_kuliah['nama'] ?></td>
 						<td>
-							<a href="#" class="btn btn-success btn-sm">Edit</a>
-							<a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $mata_kuliah['id'] ?>">Hapus</a>
+							<a href="#" class="btn btn-success btn-sm btn-edit" data-id="<?= $mata_kuliah['id'] ?>">Edit</a>
+							<a href=" #" class="btn btn-danger btn-sm btn-delete" data-id="<?= $mata_kuliah['id'] ?>">Hapus</a>
+							<div class="modal fade" id="formEditMataKuliah" tabindex="-1" aria-labelledby="formEditMataKuliahLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="formEditMataKuliahLabel">Edit Mata Kuliah</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											<form action="<?= base_url('mata-kuliah/update/' . $mata_kuliah['id']) ?>" method="POST" id="editMataKuliah">
+												<div class="form-group">
+													<label for="kode">Kode Mata Kuliah</label>
+													<input type="text" name="kode" class="form-control form-control-sm">
+												</div>
+												<div class="form-group">
+													<label for="nama">Nama Mata Kuliah</label>
+													<input type="text" name="nama" class="form-control form-control-sm">
+												</div>
+
+												<div class="mb-3">
+													<button type="submit" class="btn btn-success btn-sm">Simpan</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
 	</div>
-
-
-	<!-- Button trigger modal -->
-
 
 	<!-- Modal -->
 	<div class="modal fade" id="formCreateMataKuliah" tabindex="-1" aria-labelledby="formCreateMataKuliahLabel" aria-hidden="true">
@@ -187,7 +211,76 @@
 								processData: false,
 								contentType: false,
 								success: function(response) {
-									console.log(response);
+									hideLoading();
+									Swal.fire({
+										title: 'Berhasil!',
+										text: JSON.parse(response).message,
+										icon: 'success',
+										confirmButtonColor: '#3085d6',
+										confirmButtonText: 'Ya',
+										timer: 3000,
+									}).then(() => {
+										window.location.href = '<?= base_url('mata-kuliah') ?>';
+									});
+								},
+								error: function(err, text) {
+									hideLoading();
+									showSwalError(err, err.responseJSON.message)
+								}
+							});
+						}
+					});
+				},
+				errorElement: 'span',
+				errorPlacement: function(error, element) {
+					error.addClass('invalid-feedback');
+					element.closest('.form-group').append(error);
+				},
+				highlight: function(element, errorClass, validClass) {
+					$(element).addClass('is-invalid');
+				},
+				unhighlight: function(element, errorClass, validClass) {
+					$(element).removeClass('is-invalid');
+				}
+			});
+
+			$('#editMataKuliah').validate({
+				rules: {
+					nama: {
+						required: true,
+					},
+					kode: {
+						required: true,
+					},
+				},
+				messages: {
+					nama: {
+						required: 'nama mata kuliah wajib diisi',
+					},
+					kode: {
+						required: 'kode mata kuliah wajib diisi',
+					},
+				},
+				submitHandler: function(form) {
+					Swal.fire({
+						title: 'Konfirmasi',
+						text: "Apakah Anda yakin dengan data yang disimpan?",
+						icon: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						confirmButtonText: 'Ya',
+						cancelButtonColor: '#d33',
+						cancelButtonText: 'Tidak',
+					}).then((result) => {
+						if (result.value) {
+							showLoading();
+							$.ajax({
+								type: form.method,
+								url: form.action,
+								data: new FormData(form),
+								processData: false,
+								contentType: false,
+								success: function(response) {
 									hideLoading();
 									Swal.fire({
 										title: 'Berhasil!',
@@ -228,6 +321,32 @@
 					icon: 'error',
 					confirmButtonText: 'Cool'
 				})
+			});
+
+			$('.btn-edit').on('click', function(e) {
+				e.preventDefault();
+
+				let id = $(this).data('id');
+				$.ajax({
+					type: "GET",
+					url: "<?= base_url('mata-kuliah/show/') ?>" + id,
+					dataType: "JSON",
+					beforeSend: function() {
+						showLoading();
+					},
+					success: function({
+						data
+					}) {
+						hideLoading();
+						$('#formEditMataKuliah [name=kode]').val(data.kode);
+						$('#formEditMataKuliah [name=nama]').val(data.nama);
+						$('#formEditMataKuliah').modal('show');
+					},
+					error: function(err, text) {
+						hideLoading();
+						showSwalError(err, text);
+					}
+				});
 			});
 
 			$('.btn-delete').on('click', function(e) {

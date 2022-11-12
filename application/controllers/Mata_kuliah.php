@@ -19,7 +19,12 @@ class Mata_kuliah extends CI_Controller
 
 	public function show($id)
 	{
-		//
+		$mata_kuliah = $this->mata_kuliah_model->findById($id);
+
+		echo json_encode([
+			'success' => true,
+			'data' => $mata_kuliah,
+		]);
 	}
 
 	public function store()
@@ -31,6 +36,18 @@ class Mata_kuliah extends CI_Controller
 		echo json_encode([
 			'success' => true,
 			'message' => 'Data mata kuliah berhasil ditambahkan!'
+		]);
+	}
+
+	public function update($id)
+	{
+		$requet = $this->input->post(null, true);
+
+		$this->mata_kuliah_model->update($id, $requet);
+
+		echo json_encode([
+			'success' => true,
+			'message' => 'Data mata kuliah berhasil diupdate!'
 		]);
 	}
 
