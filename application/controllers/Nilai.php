@@ -9,6 +9,7 @@ class Nilai extends CI_Controller
 		parent::__construct();
 		$this->load->model('mahasiswa_model');
 		$this->load->model('mata_kuliah_model');
+		$this->load->model('nilai_model');
 	}
 
 	public function index()
@@ -32,6 +33,8 @@ class Nilai extends CI_Controller
 	public function store()
 	{
 		$request = $this->input->post(null, true);
+
+		$this->nilai_model->create($request);
 
 		echo json_encode([
 			'success' => true,

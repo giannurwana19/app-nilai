@@ -166,10 +166,58 @@
 					}
 				},
 				submitHandler: function(form) {
+					let id_mahasiswa = $('[name=id_mahasiswa]').val();
+					let id_mata_kuliah = $('[name=id_mata_kuliah]').val();
+					let kehadiran = (parseInt($('[name=kehadiran]').val() ?? 0) / 14) * 100 * 0.1;
+					let nilai_tugas = parseInt($('[name=nilai_tugas]').val() ?? 0) * 0.2;
+					let nilai_uts = parseInt($('[name=nilai_uts]').val() ?? 0) * 0.3;
+					let nilai_uas = parseInt($('[name=nilai_uas]').val() ?? 0) * 0.4;
+					let nilai_akhir = Math.round(kehadiran + nilai_tugas + nilai_uts + nilai_uas);
+					let title = 'Konfirmasi';
+					let text = 'Apakah anda yakin dengan data nilai yang disimpan?';
+					let icon = 'question';
+
+					if (nilai_akhir >= 80 && nilai_akhir <= 100) {
+						grade = 'A';
+					} else if (nilai_akhir >= 70 && nilai_akhir <= 79) {
+						grade = 'B';
+					} else if (nilai_akhir >= 60 && nilai_akhir <= 69) {
+						grade = 'C';
+						title = 'Perhatian!';
+						text = `Grade nilai anda ${grade}, yakin simpan?`;
+						icon = 'warning';
+					} else if (nilai_akhir >= 50 && nilai_akhir <= 59) {
+						grade = 'D';
+						title = 'Perhatian!';
+						text = `Grade nilai anda ${grade}, yakin simpan?`;
+						icon = 'warning';
+					} else if (nilai_akhir >= 0 && nilai_akhir <= 49) {
+						grade = 'E';
+						title = 'Perhatian!';
+						text = `Grade nilai anda ${grade}, yakin simpan?`;
+						icon = 'warning';
+					} else {
+						grade = 'E';
+						title = 'Perhatian!';
+						text = `Grade nilai anda ${grade}, yakin simpan?`;
+						icon = 'warning';
+					}
+
+					let formData = {
+						id_mahasiswa,
+						id_mata_kuliah,
+						kehadiran,
+						nilai_tugas,
+						nilai_uts,
+						nilai_uas,
+						nilai_akhir,
+						grade
+					};
+
 					Swal.fire({
-						title: 'Konfirmasi',
-						text: "Apakah Anda yakin dengan data yang disimpan?",
-						icon: 'question',
+						title,
+						text,
+						icon,
 						showCancelButton: true,
 						confirmButtonColor: '#3085d6',
 						confirmButtonText: 'Ya',
@@ -181,18 +229,16 @@
 							$.ajax({
 								type: form.method,
 								url: form.action,
-								data: new FormData(form),
-								processData: false,
-								contentType: false,
+								data: formData,
+								dataType: 'json',
 								success: function(response) {
 									hideLoading();
 									Swal.fire({
 										title: 'Berhasil!',
-										text: JSON.parse(response).message,
+										text: response.message,
 										icon: 'success',
 										confirmButtonColor: '#3085d6',
 										confirmButtonText: 'Ya',
-										timer: 3000,
 									}).then(() => {
 										window.location.href = '<?= base_url('nilai') ?>';
 									});
